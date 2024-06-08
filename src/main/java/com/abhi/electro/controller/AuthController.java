@@ -32,16 +32,13 @@ import org.json.JSONObject;
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
-
-	
-
 public class AuthController {
 	
 	private final AuthenticationManager authenticationManager;
 	private final UserDetailsService userDetailsService;
 	private final UserRepository userRepository;
 	private final JwtUtil jwtUtil;
-	public static final String TOKEN_PREFIX = "Bearer" ;
+	public static final String TOKEN_PREFIX = "Bearer " ;
 	public static final String HEADER_STRING = "Authorization" ;
 	private final AuthService authService ;
 
@@ -56,10 +53,12 @@ public class AuthController {
 	}
 
 	@PostMapping("/authenticate")
-	public  void createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse response) throws IOException, JSONException {
+	public  void createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest, 
+			HttpServletResponse response) throws IOException, JSONException {
 		
 		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),authenticationRequest.getPassword()));
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(),
+					authenticationRequest.getPassword()));
 			
 		} catch (BadCredentialsException e) {
 				throw new BadCredentialsException("Incorrect username or password");
@@ -75,9 +74,11 @@ public class AuthController {
 			.put ("role", optionalUser.get().getRole())
 			.toString()
 			);
-			response.addHeader(HEADER_STRING,  TOKEN_PREFIX + jwt);
 			response.addHeader("Access-Control-Expose-Headers", "Authorization");
-		    response.addHeader("Access-Control-Allow-Headers", "Authorization, X-PINGOTHER, origins, X-Requested-With, Content-Type, Accept, X-Custom-header");
+		    response.addHeader("Access-Control-Allow-Headers", "Authorization, X-PINGOTHER, Origin,"
+		    		+ " X-Requested-With, Content-Type, Accept, X-Custom-header");
+			response.addHeader(HEADER_STRING,  TOKEN_PREFIX + jwt);
+
 		}
 	}
 	
